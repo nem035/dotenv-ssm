@@ -1,0 +1,22 @@
+{
+  "name": "dotenv-ssm",
+  "version": "1.0.0",
+  "author": "nemanjacoder@gmail.com",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "files": [
+    "index.js"
+  ],
+  "bin": {
+    "dotenv-ssm": "index.js"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.797.0",
+    "getenv": "^1.0.0"
+  }
+}
