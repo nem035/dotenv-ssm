@@ -1,4 +1,4 @@
-# DOTENV SSM [![npm](https://img.shields.io/npm/v/dotenv-ssm.svg?style=flat-square)]()
+# DOTENV SSM [![npm](https://img.shields.io/npm/v/dotenv-ssm.svg?style=flat-square)](https://www.npmjs.com/package/dotenv-ssm)
 
 Simple utility to fetch env vars from the [AWS SSM Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html) and create a `.env` file from them.
 
