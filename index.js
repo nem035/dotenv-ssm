@@ -3,19 +3,25 @@
 const fs = require("fs");
 const path = require("path");
 const getenv = require("getenv");
-const AWS = require("aws-sdk");
+const {
+  SSMClient,
+  GetParametersByPathCommand,
+} = require('@aws-sdk/client-ssm');
 
 const SSM_PREFIX = getenv("SSM_PREFIX");
+const AWS_REGION = getenv("AWS_REGION");
+const AWS_ACCESS_KEY_ID = getenv("AWS_ACCESS_KEY_ID");
+const AWS_SECRET_ACCESS_KEY = getenv("AWS_SECRET_ACCESS_KEY");
 
-const awsCfg = {
-  accessKeyId: getenv("AWS_ACCESS_KEY_ID"),
-  secretAccessKey: getenv("AWS_SECRET_ACCESS_KEY"),
-  region: getenv("AWS_REGION"),
-};
+const ssm = new SSMClient({
+  region: AWS_REGION,
+  credentials: {
+    accessKeyId: AWS_ACCESS_KEY_ID,
+    secretAccessKey: AWS_SECRET_ACCESS_KEY
+  },
+});
 
-const ssm = new AWS.SSM(awsCfg);
-
-console.log(`Fetching envs from ${awsCfg.region}`);
+console.log(`Fetching envs from ${AWS_REGION} SSM Parameter Store...`);
 generateSSMDotenv()
   .then(() => {
     console.log(`Done.`);
@@ -32,13 +38,14 @@ async function generateSSMDotenv() {
   };
 
   const params = await (async function getParams(PrevToken) {
-    const result = await ssm
-      .getParametersByPath(
-        PrevToken ? { ...query, NextToken: PrevToken } : query
-      )
-      .promise();
+    const input = PrevToken ? { ...query, NextToken: PrevToken } : query;
+
+    const command = new GetParametersByPathCommand(input);
+
+    const result = await ssm.send(command);
 
     const { Parameters, NextToken } = result;
+
     if (!NextToken) {
       return Parameters;
     }
